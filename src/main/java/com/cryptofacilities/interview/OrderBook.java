@@ -4,12 +4,18 @@ import java.util.*;
 
 public class OrderBook {
 
-    private Map<Long, List<Order>> buyLevels = new HashMap<>();
-    private Map<Long, List<Order>> sellLevels = new HashMap<>();
+    HashMap<Long, List<Order>> buyLevels;
+    HashMap<Long, List<Order>> sellLevels;
 
-    // to determine levels
-    private PriorityQueue<Long> buyPrices = new PriorityQueue<>();
-    private PriorityQueue<Long> sellPrices = new PriorityQueue<>(Comparator.reverseOrder());
+    private PriorityQueue<Long> buyPrices;
+    private PriorityQueue<Long> sellPrices;
+
+    public OrderBook() {
+        buyLevels = new HashMap<>();
+        sellLevels = new HashMap<>();
+        buyPrices = new PriorityQueue<>(Comparator.reverseOrder());
+        sellPrices = new PriorityQueue<>();
+    }
 
     public void add(Order order) {
         long price = order.getPrice();
@@ -65,5 +71,79 @@ public class OrderBook {
         if(levels.get(price).isEmpty()) {
             levels.remove(price);
         }
+    }
+
+    public long getBestPrice(Side side) {
+        if(side == Side.buy) {
+            return buyPrices.peek();
+        } else {
+            return sellPrices.peek();
+        }
+    }
+
+    public long getOrderNumAtLevel(Side side, long price) {
+        if(side == Side.buy) {
+            return getOrderNumber(price, buyLevels);
+        } else {
+            return getOrderNumber(price, sellLevels);
+        }
+    }
+
+    private long getOrderNumber(long price, Map<Long, List<Order>> levels) {
+        if(!levels.containsKey(price)) {
+            return -1;
+        }
+        return levels.get(price).size();
+    }
+
+    public long getTotalQuantityAtLevel(Side side, long price) {
+        if(side == Side.buy) {
+            return getTotalQuantity(price, buyLevels);
+        } else {
+            return getTotalQuantity(price, sellLevels);
+        }
+    }
+
+    private long getTotalQuantity(long price, Map<Long, List<Order>> levels) {
+        if(!levels.containsKey(price)) {
+            return -1;
+        }
+        List<Order> ordersAtLevel = levels.get(price);
+        return ordersAtLevel.stream()
+                .map(Order::getQuantity)
+                .reduce(0L, (subtotal, orderPrice) -> subtotal + orderPrice);
+    }
+
+    public long getTotalVolumeAtLevel(Side side, long price) {
+        if(side == Side.buy) {
+            return getTotalVolume(price, buyLevels);
+        } else {
+            return getTotalVolume(price, sellLevels);
+        }
+    }
+
+    private long getTotalVolume(long price, Map<Long, List<Order>> levels) {
+        if(!levels.containsKey(price)) {
+            return -1;
+        }
+        List<Order> ordersAtLevel = levels.get(price);
+        return ordersAtLevel.stream()
+                .map(order -> order.getPrice() * order.getQuantity())
+                .reduce(0L, (subtotal, orderVolume) -> subtotal + orderVolume);
+    }
+
+    public List<Order> getOrdersAtLevel(Side side, long price) {
+        if(side == Side.buy) {
+            return getOrders(price, buyLevels);
+        } else {
+            return getOrders(price, sellLevels);
+        }
+    }
+
+    private List<Order> getOrders(long price, Map<Long, List<Order>> levels) {
+        if(!levels.containsKey(price)) {
+            return new ArrayList<>();
+        }
+        return levels.get(price);
     }
 }
