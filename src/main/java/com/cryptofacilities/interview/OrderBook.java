@@ -4,27 +4,20 @@ import java.util.*;
 
 public class OrderBook {
 
-    HashMap<Long, List<Order>> buyLevels;
-    HashMap<Long, List<Order>> sellLevels;
-
-    private PriorityQueue<Long> buyPrices;
-    private PriorityQueue<Long> sellPrices;
+    private HashMap<Long, List<Order>> buyLevels;
+    private HashMap<Long, List<Order>> sellLevels;
 
     public OrderBook() {
         buyLevels = new HashMap<>();
         sellLevels = new HashMap<>();
-        buyPrices = new PriorityQueue<>(Comparator.reverseOrder());
-        sellPrices = new PriorityQueue<>();
     }
 
     public void add(Order order) {
         long price = order.getPrice();
 
         if (order.getSide() == Side.buy) {
-            buyPrices.add(price);
             addToLevels(price, order, buyLevels);
         } else {
-            sellPrices.add(price);
             addToLevels(price, order, sellLevels);
         }
     }
@@ -75,9 +68,15 @@ public class OrderBook {
 
     public long getBestPrice(Side side) {
         if(side == Side.buy) {
-            return buyPrices.peek();
+            return buyLevels.keySet()
+                    .stream()
+                    .max(Long::compareTo)
+                    .get();
         } else {
-            return sellPrices.peek();
+            return sellLevels.keySet()
+                    .stream()
+                    .min(Long::compareTo)
+                    .get();
         }
     }
 
@@ -145,5 +144,9 @@ public class OrderBook {
             return new ArrayList<>();
         }
         return levels.get(price);
+    }
+
+    public boolean isEmpty() {
+        return buyLevels.isEmpty() && sellLevels.isEmpty();
     }
 }
