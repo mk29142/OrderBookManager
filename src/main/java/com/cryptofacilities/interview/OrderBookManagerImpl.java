@@ -2,9 +2,6 @@ package com.cryptofacilities.interview;
 
 import java.util.*;
 
-/**
- * Created by CF-8 on 6/27/2017.
- */
 public class OrderBookManagerImpl implements OrderBookManager {
 
     private Map<String, Order> allOrders = new HashMap<>();

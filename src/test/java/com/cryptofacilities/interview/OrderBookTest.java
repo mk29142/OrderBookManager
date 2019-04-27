@@ -30,15 +30,15 @@ public class OrderBookTest {
     @Test
     public void whenModifyCalled_GivenChangeInQuantity_ShouldModifyQuantityOfOrder() throws Exception {
         Order order1 = new Order("order1", "instrument1", Side.buy, 200, 10);
-        Order order2 = new Order("order2", "instrument1", Side.buy, 200, 20);
-        Order order3 = new Order("order3", "instrument1", Side.buy, 200, 30);
+        Order order2 = new Order("order2", "instrument1", Side.sell, 200, 20);
         orderBook.add(order1);
         orderBook.add(order2);
-        orderBook.add(order3);
 
-        orderBook.modify(order2, 15);
+        orderBook.modify(order1, 15);
+        orderBook.modify(order2, 25);
 
-        assertEquals(15, orderBook.getOrdersAtLevel(Side.buy, 200L).get(1).getQuantity());
+        assertEquals(15, orderBook.getOrdersAtLevel(Side.buy, 200L).get(0).getQuantity());
+        assertEquals(25, orderBook.getOrdersAtLevel(Side.sell, 200L).get(0).getQuantity());
     }
 
 
@@ -77,23 +77,29 @@ public class OrderBookTest {
     public void whenDeleteCalled_GivenLevelContainsTwoOrders_ShouldRemoveOrderFromList() throws Exception {
         Order order1 = new Order("order1", "instrument1", Side.buy, 200, 10);
         Order order2 = new Order("order2", "instrument1", Side.buy, 200, 10);
+        Order order3 = new Order("order3", "instrument1", Side.sell, 200, 10);
+        Order order4 = new Order("order4", "instrument1", Side.sell, 200, 10);
         orderBook.add(order1);
         orderBook.add(order2);
+        orderBook.add(order3);
+        orderBook.add(order4);
+
+        orderBook.delete(order1);
+        orderBook.delete(order3);
+
+        assertFalse(orderBook.getOrdersAtLevel(Side.buy, 200L).contains(order1));
+        assertFalse(orderBook.getOrdersAtLevel(Side.sell, 200L).contains(order3));
+    }
+
+    @Test
+    public void whenDeleteCalled_GivenLevelContainsOnlyOneOrders_ShouldDeleteLevel() throws Exception {
+        Order order1 = new Order("order1", "instrument1", Side.buy, 200, 10);
+        orderBook.add(order1);
 
         orderBook.delete(order1);
 
-        assertFalse(orderBook.getOrdersAtLevel(Side.buy, 200L).contains(order1));
+        assertTrue(orderBook.getOrdersAtLevel(Side.buy, 200L).isEmpty());
     }
-
-//    @Test
-//    public void whenDeleteCalled_GivenLevelContainsOnlyOneOrders_ShouldDeleteLevel() throws Exception {
-//        Order order1 = new Order("order1", "instrument1", Side.buy, 200, 10);
-//        orderBook.add(order1);
-//
-//        orderBook.delete(order1);
-//
-//        assertTrue(orderBook.getOrdersAtLevel(Side.buy, 200L).isEmpty());
-//    }
 
     @Test
     public void whenGetBestPriceCalled_GivenBuySide_ShouldReturnHighestPrice() {

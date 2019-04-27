@@ -145,8 +145,4 @@ public class OrderBook {
         }
         return levels.get(price);
     }
-
-    public boolean isEmpty() {
-        return buyLevels.isEmpty() && sellLevels.isEmpty();
-    }
 }
