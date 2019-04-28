@@ -1,16 +1,15 @@
 package com.cryptofacilities.interview;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by CF-8 on 6/27/2017.
  */
 public class SampleTest {
 
-    @Ignore
+    @Test
     public void testBestBidPrice() {
         // create order book
         OrderBookManager orderBookManager = new OrderBookManagerImpl();

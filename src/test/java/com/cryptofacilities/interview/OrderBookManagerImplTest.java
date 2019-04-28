@@ -61,6 +61,13 @@ public class OrderBookManagerImplTest {
         assertFalse(orderBookManager.getOrdersAtLevel("VOD.L", Side.buy, 200).contains(order1));
     }
 
+    @Test
+    public void whenGetBestPriceCalled_GivenInstrumentThatDoesNotExist_ShouldReturnMinusOne() {
+        long bestPrice = orderBookManager.getBestPrice("VOD.L", Side.sell);
+
+        assertEquals(-1, bestPrice);
+    }
+
 
     @Test
     public void whenGetBestPriceCalled_GivenBuyOrders_ShouldReturnHighestPrice() throws Exception {
@@ -87,21 +94,14 @@ public class OrderBookManagerImplTest {
     }
 
     @Test
-    public void whenGetBestPriceCalled_GivenInstrumentThatDoesNotExist_ShouldReturnMinusOne() {
-        long bestPrice = orderBookManager.getBestPrice("VOD.L", Side.sell);
-
-        assertEquals(-1, bestPrice);
-    }
-
-    @Test
-    public void whenGetOrderNumAtLevel_GivenInstrumentThatDoesNotExist_ShouldReturnMinusOne() {
+    public void whenGetOrderNumAtLevelCalled_GivenInstrumentThatDoesNotExist_ShouldReturnMinusOne() {
         long orderNumber = orderBookManager.getOrderNumAtLevel("VOD.L", Side.sell, 200L);
 
         assertEquals(-1, orderNumber);
     }
 
     @Test
-    public void whenGetOrderNumAtLevel_GivenWrongPrice_ShouldReturnMinusOne() {
+    public void whenGetOrderNumAtLevelCalled_GivenWrongPrice_ShouldReturnMinusOne() {
         Order order1 = new Order("order1", "VOD.L", Side.sell, 200, 10);
         orderBookManager.addOrder(order1);
 
@@ -111,7 +111,7 @@ public class OrderBookManagerImplTest {
     }
 
     @Test
-    public void whenGetOrderNumAtLevel_GivenValidInstrument_ShouldReturnTotalOrderAtThatLevelAndSide() throws Exception {
+    public void whenGetOrderNumAtLevelCalled_GivenValidInstrument_ShouldReturnTotalOrderAtThatLevelAndSide() throws Exception {
         Order order1 = new Order("order1", "VOD.L", Side.sell, 200, 10);
         Order order2 = new Order("order2", "VOD.L", Side.sell, 200, 10);
         orderBookManager.addOrder(order1);
@@ -123,14 +123,14 @@ public class OrderBookManagerImplTest {
     }
 
     @Test
-    public void whenGetTotalQuantityAtLevel_GivenInstrumentThatDoesNotExist_ShouldReturnMinusOne() {
+    public void whenGetTotalQuantityAtLevelCalled_GivenInstrumentThatDoesNotExist_ShouldReturnMinusOne() {
         long orderNumber = orderBookManager.getTotalQuantityAtLevel("VOD.L", Side.sell, 200L);
 
         assertEquals(-1, orderNumber);
     }
 
     @Test
-    public void whenGetTotalQuantityAtLevel_ShouldReturnTotalQuantityOfInstrumentOrdersAtGivenSide() throws Exception {
+    public void whenGetTotalQuantityAtLevelCalled_ShouldReturnTotalQuantityOfInstrumentOrdersAtGivenSide() throws Exception {
         Order order1 = new Order("order1", "VOD.L", Side.sell, 200, 10);
         Order order2 = new Order("order2", "VOD.L", Side.sell, 200, 10);
         orderBookManager.addOrder(order1);
@@ -142,7 +142,7 @@ public class OrderBookManagerImplTest {
     }
 
     @Test
-    public void whenGetTotalQuantityAtLevel_GivenWrongPrice_ShouldReturnMinusOne() {
+    public void whenGetTotalQuantityAtLevelCalled_GivenWrongPrice_ShouldReturnMinusOne() {
         Order order1 = new Order("order1", "VOD.L", Side.sell, 200, 10);
         orderBookManager.addOrder(order1);
 
@@ -152,14 +152,14 @@ public class OrderBookManagerImplTest {
     }
 
     @Test
-    public void whenGetTotalVolumeAtLevel_GivenInstrumentThatDoesNotExist_ShouldReturnMinusOne() {
+    public void whenGetTotalVolumeAtLevelCalled_GivenInstrumentThatDoesNotExist_ShouldReturnMinusOne() {
         long totalVolumeAtLevel = orderBookManager.getTotalVolumeAtLevel("VOD.L", Side.sell, 200L);
 
         assertEquals(-1, totalVolumeAtLevel);
     }
 
     @Test
-    public void whenGetTotalVolumeAtLevel_GivenWrongPrice_ShouldReturnMinusOne() {
+    public void whenGetTotalVolumeAtLevelCalled_GivenWrongPrice_ShouldReturnMinusOne() {
         Order order1 = new Order("order1", "VOD.L", Side.sell, 200, 10);
         orderBookManager.addOrder(order1);
 
@@ -169,7 +169,7 @@ public class OrderBookManagerImplTest {
     }
 
     @Test
-    public void whenGetTotalVolumeAtLevel_ShouldReturnSumOfPriceAndQuantityForAllOrdersAtLevel() throws Exception {
+    public void whenGetTotalVolumeAtLevelCalled_ShouldReturnSumOfPriceAndQuantityForAllOrdersAtLevel() throws Exception {
         Order order1 = new Order("order1", "VOD.L", Side.sell, 200, 10);
         Order order2 = new Order("order2", "VOD.L", Side.sell, 200, 10);
         orderBookManager.addOrder(order1);
@@ -195,7 +195,7 @@ public class OrderBookManagerImplTest {
     }
 
     @Test
-    public void whenGetOrdersAtLevelCalled_GivenInvalidInstrument_ShouldReturnEmptyList() throws Exception {
+    public void whenGetOrdersAtLevelCalled_GivenInstrumentDoesNotExist_ShouldReturnEmptyList() throws Exception {
         List<Order> orders = orderBookManager.getOrdersAtLevel("VOD.L", Side.buy, 200);
 
         assertTrue(orders.isEmpty());

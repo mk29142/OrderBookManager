@@ -4,8 +4,7 @@ import java.util.*;
 
 public class OrderBookManagerImpl implements OrderBookManager {
 
-    private Map<String, Order> allOrders = new HashMap<>();
-
+    private HashMap<String, Order> allOrders = new HashMap<>();
     private HashMap<String, OrderBook> orderBooks = new HashMap<>();
 
     public void addOrder(Order order) {

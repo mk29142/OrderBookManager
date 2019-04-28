@@ -72,7 +72,6 @@ public class OrderBookTest {
         assertEquals(expectedIndex, orderBook.getOrdersAtLevel(Side.buy, 200L).indexOf(order2));
     }
 
-
     @Test
     public void whenDeleteCalled_GivenLevelContainsTwoOrders_ShouldRemoveOrderFromList() throws Exception {
         Order order1 = new Order("order1", "instrument1", Side.buy, 200, 10);
@@ -215,7 +214,7 @@ public class OrderBookTest {
     }
 
     @Test
-    public void whenGetOrdersAtLevelCalled_GivenValidPrice_ShouldReturnNonEmptyList() {
+    public void whenGetOrdersAtLevelCalled_GivenValidPrice_ShouldReturnListContainingCorrectOrders() {
         Order buy1 = new Order("order1", "instrument1", Side.buy, 200, 10);
         Order buy2 = new Order("order2", "instrument1", Side.buy, 200, 20);
         Order sell1 = new Order("order3", "instrument1", Side.sell, 200, 30);
@@ -228,8 +227,8 @@ public class OrderBookTest {
         List<Order> buyOrders = orderBook.getOrdersAtLevel(Side.buy, 200L);
         List<Order> sellOrders = orderBook.getOrdersAtLevel(Side.sell, 200L);
 
-        assertFalse(buyOrders.isEmpty());
-        assertFalse(sellOrders.isEmpty());
+        assertTrue(buyOrders.contains(buy1) && buyOrders.contains(buy2));
+        assertTrue(sellOrders.contains(sell1) && sellOrders.contains(sell2));
     }
 
     @Test

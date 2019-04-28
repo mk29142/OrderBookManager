@@ -14,7 +14,6 @@ public class OrderBook {
 
     public void add(Order order) {
         long price = order.getPrice();
-
         if (order.getSide() == Side.buy) {
             addToLevels(price, order, buyLevels);
         } else {
@@ -68,13 +67,11 @@ public class OrderBook {
 
     public long getBestPrice(Side side) {
         if(side == Side.buy) {
-            return buyLevels.keySet()
-                    .stream()
+            return buyLevels.keySet().stream()
                     .max(Long::compareTo)
                     .get();
         } else {
-            return sellLevels.keySet()
-                    .stream()
+            return sellLevels.keySet().stream()
                     .min(Long::compareTo)
                     .get();
         }
